@@ -1,28 +1,27 @@
 package ca.qc.bdeb.info203.tp1;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class FenetrePrincipale extends JFrame {
     private final int DEFAULT_FRAME_WIDTH = 800;
     private final int DEFAULT_FRAME_HEIGHT = 600;
-    private int tailleGrille;
-    private int nbBlocks;
+    private static int TAILE_GRILLE = 4;
     private JMenuBar menuBar = new JMenuBar();
     private JMenu mnuGrille = new JMenu("Grille");
     private JMenuItem mnuChargerGrille = new JMenuItem("Charger grille");
     private ConteneurGrille pnlJeu;
 
-    public FenetrePrincipale(int tailleGrille) {
-        this.tailleGrille = tailleGrille;
-        this.nbBlocks = (int) Math.sqrt(tailleGrille);
+    // TODO: Add Javadoc
 
+    public FenetrePrincipale() {
         mnuGrille.add(mnuChargerGrille);
         menuBar.add(mnuGrille);
 
-        pnlJeu = new ConteneurGrille(nbBlocks, nbBlocks);
-        for (int i = 0; i < tailleGrille; i++) {
-            pnlJeu.ajouterComposanteDansGrille(creerBlock());
-        }
+        // Kinda awkward
+        pnlJeu = new ConteneurGrille(TAILE_GRILLE);
+        pnlJeu.populerGrille(genererGrilleRandom());
 
         this.setJMenuBar(menuBar);
         this.setContentPane(pnlJeu);
@@ -33,11 +32,21 @@ public class FenetrePrincipale extends JFrame {
         this.setVisible(true);
     }
 
-    public ConteneurGrille creerBlock() {
-        ConteneurGrille block = new ConteneurGrille(nbBlocks, nbBlocks);
-        for (int i = 0; i < tailleGrille; i++) {
-            block.ajouterComposanteDansGrille(new CaseSudoku(4));
+    // FIXME: For testing only, doesn't generate valid grids
+    public ArrayList<Character> genererGrilleRandom() {
+        ArrayList<Character> grille = new ArrayList<>();
+        Random r = new Random();
+        // Make this adaptable to any grid size
+        char[] chars = {' ', '1', '2', '3', '4'};
+
+        for (int i = 0; i < TAILE_GRILLE*TAILE_GRILLE; i++) {
+            grille.add(chars[r.nextInt(chars.length)]);
         }
-        return block;
+
+        return grille;
+    }
+
+    public static int getTaileGrille() {
+        return TAILE_GRILLE;
     }
 }
