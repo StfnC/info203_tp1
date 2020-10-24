@@ -1,10 +1,14 @@
 package ca.qc.bdeb.info203.tp1;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class FenetrePrincipale extends JFrame {
+    private final String GRILLE_PAR_DEFAUT = "grille.txt";
     private final int DEFAULT_FRAME_WIDTH = 800;
     private final int DEFAULT_FRAME_HEIGHT = 600;
     private static int TAILE_GRILLE = 4;
@@ -12,16 +16,34 @@ public class FenetrePrincipale extends JFrame {
     private JMenu mnuGrille = new JMenu("Grille");
     private JMenuItem mnuChargerGrille = new JMenuItem("Charger grille");
     private ConteneurGrille pnlJeu;
+    private JFileChooser fileChooser = new JFileChooser();
+    private Jeu jeu;
 
     // TODO: Add Javadoc
 
     public FenetrePrincipale() {
+        // TODO: AJOUTER FILE NOT FOUND EXCEPTIONS
+        jeu = new Jeu(new File(GRILLE_PAR_DEFAUT));
+
+        mnuChargerGrille.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int actionUtilisateur = fileChooser.showOpenDialog(FenetrePrincipale.this);
+
+                if (actionUtilisateur == JFileChooser.APPROVE_OPTION) {
+                    File fileToOpen = fileChooser.getSelectedFile();
+                    // FIXME: ONLY FOR TESTING, REPLACE ASAP
+                    jeu.lireFichier(fileToOpen);
+                    jeu.initialiserMatriceJeu();
+                }
+            }
+        });
         mnuGrille.add(mnuChargerGrille);
         menuBar.add(mnuGrille);
 
-        // Kinda awkward
         pnlJeu = new ConteneurGrille(TAILE_GRILLE);
-        pnlJeu.populerGrille(genererGrilleRandom());
+
+        this.mettreAJourInterface();
 
         this.setJMenuBar(menuBar);
         this.setContentPane(pnlJeu);
@@ -32,18 +54,8 @@ public class FenetrePrincipale extends JFrame {
         this.setVisible(true);
     }
 
-    // FIXME: For testing only, doesn't generate valid grids
-    public ArrayList<Character> genererGrilleRandom() {
-        ArrayList<Character> grille = new ArrayList<>();
-        Random r = new Random();
-        // Make this adaptable to any grid size
-        char[] chars = {' ', '1', '2', '3', '4'};
-
-        for (int i = 0; i < TAILE_GRILLE*TAILE_GRILLE; i++) {
-            grille.add(chars[r.nextInt(chars.length)]);
-        }
-
-        return grille;
+    public void mettreAJourInterface() {
+        pnlJeu.populerGrille(jeu.getMatriceJeu(), jeu);
     }
 
     public static int getTaileGrille() {

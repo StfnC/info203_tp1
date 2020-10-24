@@ -19,13 +19,15 @@ public class ConteneurGrille extends JPanel {
         this.setBackground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
     }
 
-    public void populerGrille(ArrayList<Character> grille) {
-        for (Character character : grille) {
-            if (character.equals(' ')) {
-                ajouterCaseDansGrille(new CaseSudoku(tailleGrille));
-            } else {
-                // FIXME: This is bad :(, maybe use something else than chars
-                ajouterCaseDansGrille(new CaseSudoku(tailleGrille, Integer.parseInt("" + character)));
+    public void populerGrille(int[][] matriceValeurs, Observateur observateur) {
+        for (int[] ligne : matriceValeurs) {
+            for (int valeur : ligne) {
+                // La case est vide
+                if (valeur <= 0) {
+                    ajouterCaseDansGrille(new CaseSudoku(tailleGrille, observateur));
+                } else { // La case a une valeur
+                    ajouterCaseDansGrille(new CaseSudoku(tailleGrille, valeur));
+                }
             }
         }
     }
