@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class FenetrePrincipale extends JFrame {
     private final String GRILLE_PAR_DEFAUT = "grille.txt";
@@ -22,7 +20,8 @@ public class FenetrePrincipale extends JFrame {
     // TODO: Add Javadoc
 
     public FenetrePrincipale() {
-        // TODO: AJOUTER FILE NOT FOUND EXCEPTIONS
+        // TODO: -AJOUTER FILE NOT FOUND EXCEPTIONS
+        //       -PROMPT SOMETHING TO CHOOSE A FILE IF FileNotFound, make sure app doesn't crash if a bad file type/wrong grid format is loaded
         jeu = new Jeu(new File(GRILLE_PAR_DEFAUT));
 
         mnuChargerGrille.addActionListener(new ActionListener() {
@@ -32,9 +31,11 @@ public class FenetrePrincipale extends JFrame {
 
                 if (actionUtilisateur == JFileChooser.APPROVE_OPTION) {
                     File fileToOpen = fileChooser.getSelectedFile();
-                    // FIXME: ONLY FOR TESTING, REPLACE ASAP
+                    // FIXME: -ONLY FOR TESTING, REPLACE ASAP
+                    //        -Loading the grid doesn't update ui
                     jeu.lireFichier(fileToOpen);
                     jeu.initialiserMatriceJeu();
+                    FenetrePrincipale.this.mettreAJourInterface();
                 }
             }
         });

@@ -11,6 +11,8 @@ public class ConteneurGrille extends JPanel {
     private int tailleGrille;
     private ArrayList<CaseSudoku> listeCasesSudokuGrille = new ArrayList<>();
 
+    // TODO: Javadoc everything
+
     public ConteneurGrille(int tailleGrille) {
         super(new GridLayout(tailleGrille, tailleGrille, ESPACE_HORIZONTAL, ESPACE_VERTICAL));
         this.tailleGrille = tailleGrille;
@@ -20,6 +22,7 @@ public class ConteneurGrille extends JPanel {
     }
 
     public void populerGrille(int[][] matriceValeurs, Observateur observateur) {
+        viderConteneur();
         for (int[] ligne : matriceValeurs) {
             for (int valeur : ligne) {
                 // La case est vide
@@ -35,5 +38,13 @@ public class ConteneurGrille extends JPanel {
     public void ajouterCaseDansGrille(CaseSudoku caseSudoku) {
         listeCasesSudokuGrille.add(caseSudoku);
         this.add(caseSudoku);
+    }
+
+    public void viderConteneur() {
+        // FIXME: Crashes
+        for (CaseSudoku caseSudoku : listeCasesSudokuGrille) {
+            this.remove(caseSudoku);
+            listeCasesSudokuGrille.remove(caseSudoku);
+        }
     }
 }

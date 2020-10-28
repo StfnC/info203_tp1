@@ -1,9 +1,9 @@
 package ca.qc.bdeb.info203.tp1;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.List;
 
 public class Jeu implements Observateur {
@@ -47,6 +47,7 @@ public class Jeu implements Observateur {
     }
 
     public void afficherMatrice() {
+        System.out.println();
         for (int[] ligne : matriceJeu) {
             System.out.print("[");
             for (int valeur : ligne) {
@@ -69,7 +70,7 @@ public class Jeu implements Observateur {
 
     private boolean verifierLignesHorizontales() {
         boolean valide = true;
-        for (int[] ligneHorizontale: matriceJeu) {
+        for (int[] ligneHorizontale : matriceJeu) {
             valide &= verifierBonsChiffresPresents(ligneHorizontale);
         }
         return valide;
@@ -107,9 +108,19 @@ public class Jeu implements Observateur {
     private boolean verifierBonsChiffresPresents(int[] chiffres) {
         boolean valide = true;
         for (int i = 1; i <= TAILLE_GRILLE; i++) {
-            valide &= Arrays.asList(chiffres).contains(i);
+            valide &= listeContient(chiffres, i);
         }
         return valide;
+    }
+
+    private boolean listeContient(int[] chiffres, int valeur) {
+        boolean trouve = false;
+        for (int chiffre : chiffres) {
+            if (chiffre == valeur) {
+                trouve = true;
+            }
+        }
+        return trouve;
     }
 
     @Override
@@ -121,6 +132,13 @@ public class Jeu implements Observateur {
             int colonne = caseSudoku.getNumCase() % TAILLE_GRILLE;
             matriceJeu[ligne][colonne] = caseSudoku.getValeurCase();
             afficherMatrice();
+
+            boolean grilleValide = verifierGrille();
+            if (grilleValide) {
+                JOptionPane.showMessageDialog(null, "Vous avez gagné!");
+            } else {
+                System.out.println("Keep trying");
+            }
         }
     }
 }
