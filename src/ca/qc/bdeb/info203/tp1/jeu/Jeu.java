@@ -1,4 +1,8 @@
-package ca.qc.bdeb.info203.tp1;
+package ca.qc.bdeb.info203.tp1.jeu;
+
+import ca.qc.bdeb.info203.tp1.gui.CaseSudoku;
+import ca.qc.bdeb.info203.tp1.observer.Observable;
+import ca.qc.bdeb.info203.tp1.observer.Observateur;
 
 import javax.swing.*;
 import java.io.File;
@@ -15,7 +19,10 @@ public class Jeu implements Observateur {
         matriceJeu = new int[TAILLE_GRILLE][TAILLE_GRILLE];
         this.lireFichier(grille);
         this.initialiserMatriceJeu();
-        this.verifierBlocs();
+    }
+
+    public int getTailleGrille() {
+        return TAILLE_GRILLE;
     }
 
     public int[][] getMatriceJeu() {

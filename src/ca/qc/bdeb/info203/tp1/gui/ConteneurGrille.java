@@ -1,4 +1,6 @@
-package ca.qc.bdeb.info203.tp1;
+package ca.qc.bdeb.info203.tp1.gui;
+
+import ca.qc.bdeb.info203.tp1.observer.Observateur;
 
 import javax.swing.*;
 import java.awt.*;

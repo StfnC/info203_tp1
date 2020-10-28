@@ -1,4 +1,6 @@
-package ca.qc.bdeb.info203.tp1;
+package ca.qc.bdeb.info203.tp1.gui;
+
+import ca.qc.bdeb.info203.tp1.jeu.Jeu;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +11,6 @@ public class FenetrePrincipale extends JFrame {
     private final String GRILLE_PAR_DEFAUT = "grille.txt";
     private final int DEFAULT_FRAME_WIDTH = 800;
     private final int DEFAULT_FRAME_HEIGHT = 600;
-    private static int TAILE_GRILLE = 4;
     private JMenuBar menuBar = new JMenuBar();
     private JMenu mnuGrille = new JMenu("Grille");
     private JMenuItem mnuChargerGrille = new JMenuItem("Charger grille");
@@ -42,7 +43,7 @@ public class FenetrePrincipale extends JFrame {
         mnuGrille.add(mnuChargerGrille);
         menuBar.add(mnuGrille);
 
-        pnlJeu = new ConteneurGrille(TAILE_GRILLE);
+        pnlJeu = new ConteneurGrille(jeu.getTailleGrille());
 
         this.mettreAJourInterface();
 
@@ -57,9 +58,5 @@ public class FenetrePrincipale extends JFrame {
 
     public void mettreAJourInterface() {
         pnlJeu.populerGrille(jeu.getMatriceJeu(), jeu);
-    }
-
-    public static int getTaileGrille() {
-        return TAILE_GRILLE;
     }
 }
