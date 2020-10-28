@@ -29,9 +29,9 @@ public class ConteneurGrille extends JPanel {
             for (int valeur : ligne) {
                 // La case est vide
                 if (valeur <= 0) {
-                    ajouterCaseDansGrille(new CaseSudoku(tailleGrille, observateur));
+                    ajouterCaseDansGrille(new CaseSudoku(observateur));
                 } else { // La case a une valeur
-                    ajouterCaseDansGrille(new CaseSudoku(tailleGrille, valeur));
+                    ajouterCaseDansGrille(new CaseSudoku(valeur));
                 }
             }
         }
