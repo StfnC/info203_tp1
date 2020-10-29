@@ -9,9 +9,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Random;
 
 public class Jeu implements Observateur {
     private final int TAILLE_GRILLE = 4;
+    private final String DELIMITEUR_GRILE = "-";
     private List<String> lignesGrillesInitiales;
     private int[][] matriceJeu;
 
@@ -31,23 +33,36 @@ public class Jeu implements Observateur {
 
     public void lireFichier(File fichier) {
         // TODO: Handle the exception better
+        // TODO: Make sure that ligneGrillesInitiales % 4 == 0, so there are only complete grids
         try {
             this.lignesGrillesInitiales = Files.readAllLines(fichier.toPath());
+            // Cette ligne permet d'enlever les lignes qui séparent les grilles.
+            // On ne peut pas simplement utiliser un boucle et enlever des éléments de la liste, car cela lance une ConcurrentModificationException
+            this.lignesGrillesInitiales.removeIf(ligne -> ligne.contains(DELIMITEUR_GRILE));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public int choisirGrilleRandom() {
+        Random r = new Random();
+        int nbHasard = r.nextInt(this.lignesGrillesInitiales.size());
+        int indexLigneGrille = Math.floorDiv(nbHasard, TAILLE_GRILLE) * TAILLE_GRILLE;
+        return indexLigneGrille;
+    }
+
     public void initialiserMatriceJeu() {
-        // FIXME: This doesn't account for multiple grids in one file
-        for (int i = 0; i < TAILLE_GRILLE; i++) {
+        // FIXME: Refactor these loops
+        int indiceLigneGrille = choisirGrilleRandom();
+        for (int i = indiceLigneGrille; i < (indiceLigneGrille + TAILLE_GRILLE); i++) {
             String ligne = this.lignesGrillesInitiales.get(i);
             char[] characteres = ligne.toCharArray();
             for (int j = 0; j < TAILLE_GRILLE; j++) {
                 int valeurNumerique = Character.getNumericValue(characteres[j]);
 
                 // Character.getNumericValue() renvoie -1 si le character n'est pas un nombre
-                matriceJeu[i][j] = Math.max(valeurNumerique, 0);
+                // FIXME: This is kinda whack
+                matriceJeu[i % TAILLE_GRILLE][j] = Math.max(valeurNumerique, 0);
             }
         }
         afficherMatrice();

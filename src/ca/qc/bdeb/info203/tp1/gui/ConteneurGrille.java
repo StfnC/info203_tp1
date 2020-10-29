@@ -34,7 +34,6 @@ public class ConteneurGrille extends JPanel {
                 }
             }
         }
-        System.out.println(Arrays.asList(listeCasesSudokuGrille.toArray()));
     }
 
     public void ajouterCaseDansGrille(CaseSudoku caseSudoku) {
