@@ -45,6 +45,17 @@ public class CaseSudoku extends JButton implements Observable {
         return nbTotalClics;
     }
 
+    public static void setNbTotalCases(int nbTotalCases) {
+        CaseSudoku.nbTotalCases = nbTotalCases;
+    }
+
+    @Override
+    public String toString() {
+        return "CaseSudoku{" +
+                "numCase=" + numCase +
+                '}';
+    }
+
     @Override
     public void definirObservateur(Observateur observateur) {
         jeu = observateur;

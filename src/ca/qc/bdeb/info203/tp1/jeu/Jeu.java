@@ -68,6 +68,8 @@ public class Jeu implements Observateur {
     public boolean verifierGrille() {
         boolean grilleValide = true;
 
+        grilleValide = grilleValide && verifierLignesHorizontales();
+
         grilleValide &= verifierLignesHorizontales();
         grilleValide &= verifierLignesVericales();
         grilleValide &= verifierBlocs();
@@ -149,5 +151,55 @@ public class Jeu implements Observateur {
                 JOptionPane.showMessageDialog(null, "Vous avez gagné avec " + CaseSudoku.getNbTotalClics() + " modifications!");
             }
         }
+    }
+
+    public boolean peutPlacerValeur(int ligne, int colonne, int valeur) {
+        // TODO: -Make this DRY, for now, only for testing
+        //       -Maybe use this instead of all the verifier blocs to assign the correct color to the button
+        boolean peutPlacer = true;
+        int limiteBloc = (int) Math.sqrt(TAILLE_GRILLE);
+
+        for (int i = 0; i < TAILLE_GRILLE; i++) {
+            // Verifier chaque valeur sur la ligne
+            if (matriceJeu[ligne][i] == valeur) {
+                peutPlacer = false;
+            }
+            // Verifier chaque valeurs sur la colonne
+            if (matriceJeu[i][colonne] == valeur) {
+                peutPlacer = false;
+            }
+        }
+
+        // FIXME: Not very DRY
+        int indexColonneBloc = Math.floorDiv(colonne, limiteBloc) * limiteBloc;
+        int indexLigneBloc = Math.floorDiv(ligne, limiteBloc) * limiteBloc;
+        for (int i = 0; i < limiteBloc; i++) {
+            for (int j = 0; j < limiteBloc; j++) {
+                if (matriceJeu[indexLigneBloc + 1][indexColonneBloc + 1] == valeur) {
+                    peutPlacer = false;
+                }
+            }
+        }
+        return peutPlacer;
+    }
+
+    public void resoudre() {
+        // FIXME: Broken
+        // Adapté d'ici: https://www.youtube.com/watch?v=G_UYXzGuqvM&ab_channel=Computerphile
+        for (int i = 0; i < TAILLE_GRILLE; i++) {
+            for (int j = 0; j < TAILLE_GRILLE; j++) {
+                // Si la case n'a pas encore de valeur
+                if (matriceJeu[i][j] == 0) {
+                    for (int k = 1; k <= TAILLE_GRILLE; k++) {
+                        if (peutPlacerValeur(i, j, k)) {
+                            matriceJeu[i][j] = k;
+                            resoudre();
+                            matriceJeu[i][j] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        afficherMatrice();
     }
 }

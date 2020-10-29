@@ -14,10 +14,12 @@ public class FenetrePrincipale extends JFrame {
     private JMenuBar menuBar = new JMenuBar();
     private JMenu mnuGrille = new JMenu("Grille");
     private JMenuItem mnuChargerGrille = new JMenuItem("Charger grille");
+    private JMenuItem mnuResoudre = new JMenuItem("Résoudre");
     private ConteneurGrille pnlJeu;
     private JFileChooser fileChooser = new JFileChooser();
     private Jeu jeu;
 
+    // TODO: Add label that shows current number of moves
     // TODO: Add Javadoc
 
     public FenetrePrincipale() {
@@ -36,19 +38,23 @@ public class FenetrePrincipale extends JFrame {
                     //        -Loading the grid doesn't update ui
                     jeu.lireFichier(fileToOpen);
                     jeu.initialiserMatriceJeu();
-                    FenetrePrincipale.this.mettreAJourInterface();
+                    FenetrePrincipale.this.mettreAJourInterfaceAvecNouvelleGrille();
                 }
             }
         });
         mnuGrille.add(mnuChargerGrille);
+        mnuResoudre.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jeu.resoudre();
+            }
+        });
+        mnuGrille.add(mnuResoudre);
         menuBar.add(mnuGrille);
 
-        pnlJeu = new ConteneurGrille(jeu.getTailleGrille());
-
-        this.mettreAJourInterface();
+        this.mettreAJourInterfaceAvecNouvelleGrille();
 
         this.setJMenuBar(menuBar);
-        this.setContentPane(pnlJeu);
         this.setSize(DEFAULT_FRAME_WIDTH, DEFAULT_FRAME_HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Udoku");
@@ -56,7 +62,11 @@ public class FenetrePrincipale extends JFrame {
         this.setVisible(true);
     }
 
-    public void mettreAJourInterface() {
+    public void mettreAJourInterfaceAvecNouvelleGrille() {
+        this.setVisible(false);
+        pnlJeu = new ConteneurGrille(jeu.getTailleGrille());
         pnlJeu.populerGrille(jeu.getMatriceJeu(), jeu);
+        this.setContentPane(pnlJeu);
+        this.setVisible(true);
     }
 }
