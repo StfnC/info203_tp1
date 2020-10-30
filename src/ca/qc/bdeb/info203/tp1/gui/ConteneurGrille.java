@@ -5,7 +5,6 @@ import ca.qc.bdeb.info203.tp1.observer.Observateur;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class ConteneurGrille extends JPanel {

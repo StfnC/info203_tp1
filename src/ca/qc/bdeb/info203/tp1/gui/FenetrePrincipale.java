@@ -11,6 +11,10 @@ import java.io.File;
 
 public class FenetrePrincipale extends JFrame {
     private final String GRILLE_PAR_DEFAUT = "grille.txt";
+    private final String MESSAGE_COMMENT_JOUER = "Le but du jeu est de remplir chaque ligne, colonne et bloc de 2x2 avec les nombres de 1 à 4. \n" +
+                                                 "Attention, aucun chiffre ne doit se répéter dans une ligne/colonne/bloc. \n" +
+                                                 "Un indice de couleur vous indique combien de ces conditions sont remplies. \n" +
+                                                 "Plus l'indice est foncé, plus la valeur dans la case est adéquate.";
     private final int DEFAULT_FRAME_WIDTH = 800;
     private final int DEFAULT_FRAME_HEIGHT = 600;
     private File fichierGrille = new File(GRILLE_PAR_DEFAUT);
@@ -60,6 +64,12 @@ public class FenetrePrincipale extends JFrame {
         mnuJeu.add(mnuResoudre);
         menuBar.add(mnuJeu);
 
+        mnuCommentJouer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(FenetrePrincipale.this, MESSAGE_COMMENT_JOUER);
+            }
+        });
         mnuAide.add(mnuCommentJouer);
         mnuAPropos.addActionListener(new ActionListener() {
             @Override

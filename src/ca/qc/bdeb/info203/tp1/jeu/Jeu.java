@@ -50,7 +50,7 @@ public class Jeu implements Observateur {
             // Cette ligne permet d'enlever les lignes qui séparent les grilles.
             // On ne peut pas simplement utiliser un boucle et enlever des éléments de la liste, car cela lance une ConcurrentModificationException
         } catch (IOException ioe) {
-            JOptionPane.showMessageDialog(null, "Erreur d'entré/sortie", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(fenetreJeu, "Erreur d'entré/sortie", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return fichierValide;
     }
@@ -198,7 +198,7 @@ public class Jeu implements Observateur {
     public void proposerDeRecommencer() {
         // On demande au joueur s'il veut recommencer
         int recommencer = JOptionPane.showConfirmDialog(
-                null,
+                fenetreJeu,
                 "Vous avez gagné avec " + CaseSudoku.getNbTotalClics() + " modifications! Voulez-vous recommencer?",
                 "Partie terminée", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
         if (recommencer == JOptionPane.YES_OPTION) {
