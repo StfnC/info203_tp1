@@ -7,15 +7,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CaseSudoku extends JButton implements Observable {
     private static int nbTotalClics = 0;
     private static int nbTotalCases = 0;
+    private Map<Integer, Color> indicesCouleurs = new HashMap<>();
     private int numCase;
     private Color coueurParDefaut = Color.WHITE;
     private Observateur jeu;
 
     public CaseSudoku(Observateur observateur) {
+        indicesCouleurs.put(0, Color.DARK_GRAY);
+        indicesCouleurs.put(1, Color.RED);
+        indicesCouleurs.put(2, Color.YELLOW);
+        indicesCouleurs.put(3, Color.GREEN);
+
         this.definirObservateur(observateur);
         this.numCase = nbTotalCases;
         nbTotalCases++;
@@ -37,8 +45,16 @@ public class CaseSudoku extends JButton implements Observable {
         this.setEnabled(false);
     }
 
+    public static void setNbTotalClics(int nbTotalClics) {
+        CaseSudoku.nbTotalClics = nbTotalClics;
+    }
+
     public int getNumCase() {
         return numCase;
+    }
+
+    public void setIndiceCouleurCase(int niveauCouleur) {
+        this.setBackground(indicesCouleurs.get(niveauCouleur));
     }
 
     public static int getNbTotalClics() {

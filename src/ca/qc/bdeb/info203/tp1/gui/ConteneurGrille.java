@@ -23,7 +23,6 @@ public class ConteneurGrille extends JPanel {
     }
 
     public void populerGrille(int[][] matriceValeurs, Observateur observateur) {
-        CaseSudoku.setNbTotalCases(0);
         for (int[] ligne : matriceValeurs) {
             for (int valeur : ligne) {
                 // La case est vide

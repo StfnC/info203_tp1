@@ -1,6 +1,7 @@
 package ca.qc.bdeb.info203.tp1.jeu;
 
 import ca.qc.bdeb.info203.tp1.gui.CaseSudoku;
+import ca.qc.bdeb.info203.tp1.gui.FenetrePrincipale;
 import ca.qc.bdeb.info203.tp1.observer.Observable;
 import ca.qc.bdeb.info203.tp1.observer.Observateur;
 
@@ -14,10 +15,12 @@ import java.util.Random;
 public class Jeu implements Observateur {
     private final int TAILLE_GRILLE = 4;
     private final String DELIMITEUR_GRILE = "-";
+    private FenetrePrincipale fenetreJeu;
     private List<String> lignesGrillesInitiales;
     private int[][] matriceJeu;
 
-    public Jeu(File grille) {
+    public Jeu(File grille, FenetrePrincipale fenetreJeu) {
+        this.fenetreJeu = fenetreJeu;
         matriceJeu = new int[TAILLE_GRILLE][TAILLE_GRILLE];
         this.lireFichier(grille);
         this.initialiserMatriceJeu();
@@ -80,7 +83,7 @@ public class Jeu implements Observateur {
         }
     }
 
-    public boolean verifierGrille() {
+    public boolean verifierSiGrilleValide() {
         boolean grilleValide = true;
 
         grilleValide = grilleValide && verifierLignesHorizontales();
@@ -157,45 +160,84 @@ public class Jeu implements Observateur {
             int valeurChangee = matriceJeu[ligne][colonne];
             // Le modulo + 1 permet de toujours gader la valeur de la case entre 1 et valeurMax
             int nouvelleValeur = (valeurChangee % TAILLE_GRILLE) + 1;
+            int niveauIndice = peutPlacerValeur(ligne, colonne, nouvelleValeur);
             matriceJeu[ligne][colonne] = nouvelleValeur;
+            caseSudoku.setIndiceCouleurCase(niveauIndice);
             caseSudoku.setText("" + nouvelleValeur);
             afficherMatrice();
 
-            boolean grilleValide = verifierGrille();
+            boolean grilleValide = verifierSiGrilleValide();
             if (grilleValide) {
-                JOptionPane.showMessageDialog(null, "Vous avez gagné avec " + CaseSudoku.getNbTotalClics() + " modifications!");
+                proposerDeRecommencer();
             }
         }
     }
 
-    public boolean peutPlacerValeur(int ligne, int colonne, int valeur) {
+    /**
+     * Propose au joueur de recommencer
+     */
+    public void proposerDeRecommencer() {
+        // On demande au joueur s'il veut recommencer
+        int recommencer = JOptionPane.showConfirmDialog(
+                null,
+                "Vous avez gagné avec " + CaseSudoku.getNbTotalClics() + " modifications! Voulez-vous recommencer?",
+                "Partie terminée", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (recommencer == JOptionPane.YES_OPTION) {
+            fenetreJeu.recommencerPartie();
+        } else {
+            System.exit(0);
+        }
+    }
+
+    /**
+     * @param ligne Ligne dans la matrice
+     * @param colonne Colonne dans la matrice
+     * @param valeur Valeur a verifier
+     * @return Niveau de validite du move
+     */
+    public int peutPlacerValeur(int ligne, int colonne, int valeur) {
         // TODO: -Make this DRY, for now, only for testing
         //       -Maybe use this instead of all the verifier blocs to assign the correct color to the button
-        boolean peutPlacer = true;
+        //       -Expplain why chose to use int
+        int niveauDeCouleur = 0;
         int limiteBloc = (int) Math.sqrt(TAILLE_GRILLE);
 
+        boolean pasSurLigne = true;
+        boolean pasSurColonne = true;
         for (int i = 0; i < TAILLE_GRILLE; i++) {
             // Verifier chaque valeur sur la ligne
             if (matriceJeu[ligne][i] == valeur) {
-                peutPlacer = false;
+                pasSurLigne = false;
             }
             // Verifier chaque valeurs sur la colonne
             if (matriceJeu[i][colonne] == valeur) {
-                peutPlacer = false;
+                pasSurColonne = false;
             }
         }
 
-        // FIXME: Not very DRY
+        if (pasSurLigne && pasSurColonne) {
+            niveauDeCouleur += 2;
+        } else if (pasSurLigne || pasSurColonne) {
+            niveauDeCouleur++;
+        }
+
+        // FIXME: Not very DRY, these loops are a mess
+        // FIXME: Doesn't work
+        boolean pasDansBloc = true;
         int indexColonneBloc = Math.floorDiv(colonne, limiteBloc) * limiteBloc;
         int indexLigneBloc = Math.floorDiv(ligne, limiteBloc) * limiteBloc;
-        for (int i = 0; i < limiteBloc; i++) {
-            for (int j = 0; j < limiteBloc; j++) {
-                if (matriceJeu[indexLigneBloc + 1][indexColonneBloc + 1] == valeur) {
-                    peutPlacer = false;
+        for (int i = indexLigneBloc; i < (indexLigneBloc + limiteBloc); i++) {
+            for (int j = indexColonneBloc; j < (indexColonneBloc + limiteBloc); j++) {
+                if (matriceJeu[i][j] == valeur) {
+                    pasDansBloc = false;
                 }
             }
         }
-        return peutPlacer;
+        if (pasDansBloc) {
+            niveauDeCouleur++;
+        }
+
+        return niveauDeCouleur;
     }
 
     public void resoudre() {
@@ -206,7 +248,7 @@ public class Jeu implements Observateur {
                 // Si la case n'a pas encore de valeur
                 if (matriceJeu[i][j] == 0) {
                     for (int k = 1; k <= TAILLE_GRILLE; k++) {
-                        if (peutPlacerValeur(i, j, k)) {
+                        if (peutPlacerValeur(i, j, k) == 0) {
                             matriceJeu[i][j] = k;
                             resoudre();
                             matriceJeu[i][j] = 0;
