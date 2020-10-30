@@ -113,8 +113,8 @@ public class FenetrePrincipale extends JFrame {
     }
 
     public void recommencerPartie() {
-        CaseSudoku.setNbTotalCases(0);
-        CaseSudoku.setNbTotalClics(0);
+        CaseSudoku.reinitialiserNbTotalCases();
+        CaseSudoku.reinitialiserNbTotalClics();
         boolean grilleChargee = false;
         do {
             try {
