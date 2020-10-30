@@ -17,6 +17,7 @@ public class FenetrePrincipale extends JFrame {
                                                  "Plus l'indice est foncé, plus la valeur dans la case est adéquate.";
     private final int DEFAULT_FRAME_WIDTH = 800;
     private final int DEFAULT_FRAME_HEIGHT = 600;
+    private float tempsPartieEnMilliSecondes = 0;
     private File fichierGrille = new File(GRILLE_PAR_DEFAUT);
     private JMenuBar menuBar = new JMenuBar();
     private JMenu mnuJeu = new JMenu("Jeu");
@@ -30,14 +31,17 @@ public class FenetrePrincipale extends JFrame {
     private FileNameExtensionFilter filtreExtension = new FileNameExtensionFilter("Fichier texte (.txt)", "txt");
     private JFileChooser fileChooser = new JFileChooser();
     private Jeu jeu;
+    private Timer tmrTemps = new Timer(10, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            tempsPartieEnMilliSecondes += 10;
+        }
+    });
 
-    // TODO: Add label that shows current number of moves
     // TODO: Add Javadoc
 
     public FenetrePrincipale() {
         fileChooser.setFileFilter(filtreExtension);
-        // TODO: -AJOUTER FILE NOT FOUND EXCEPTIONS
-        //       -PROMPT SOMETHING TO CHOOSE A FILE IF FileNotFound, make sure app doesn't crash if a bad file type/wrong grid format is loaded
         jeu = new Jeu(new File(GRILLE_PAR_DEFAUT), this);
 
         mnuNouvellePartie.addActionListener(new ActionListener() {
@@ -128,5 +132,15 @@ public class FenetrePrincipale extends JFrame {
         } while (!grilleChargee);
         jeu.initialiserMatriceJeu();
         this.mettreAJourInterfaceAvecNouvelleGrille();
+        tempsPartieEnMilliSecondes = 0;
+        tmrTemps.start();
+    }
+
+    public String getTempsPartie() {
+        return tempsPartieEnMilliSecondes / 1000 + "";
+    }
+
+    public void arreterTimer() {
+        this.tmrTemps.stop();
     }
 }

@@ -12,8 +12,12 @@ import java.util.Map;
 
 public class CaseSudoku extends JButton implements Observable {
     private static final Color COULEUR_TEXT_PAR_DEFAUT = new Color(51, 51, 51);
+    private static final Color VERT_PALE = new Color(170, 255, 136);
+    private static final Color VERT_MOYEN = new Color(133, 255, 51);
+    private static final Color VERT_FONCE = new Color(0, 238, 51);
     private static int nbTotalClics = 0;
     private static int nbTotalCases = 0;
+    // Chaque niveau d'indice est associé à une couleur
     private Map<Integer, Color> indicesCouleurs = new HashMap<>();
     private int numCase;
     private Color coueurParDefaut = Color.WHITE;
@@ -21,9 +25,9 @@ public class CaseSudoku extends JButton implements Observable {
 
     public CaseSudoku(Observateur observateur) {
         indicesCouleurs.put(0, Color.DARK_GRAY);
-        indicesCouleurs.put(1, new Color(170, 255, 136));
-        indicesCouleurs.put(2, new Color(133, 255, 51));
-        indicesCouleurs.put(3, new Color(0, 238, 51));
+        indicesCouleurs.put(1, VERT_PALE);
+        indicesCouleurs.put(2, VERT_MOYEN);
+        indicesCouleurs.put(3, VERT_FONCE);
 
         this.definirObservateur(observateur);
         this.numCase = nbTotalCases;

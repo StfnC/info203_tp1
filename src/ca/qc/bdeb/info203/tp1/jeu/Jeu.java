@@ -20,6 +20,8 @@ public class Jeu implements Observateur {
     private List<String> lignesGrillesInitiales;
     private int[][] matriceJeu;
 
+    // TODO: Javadoc everything
+
     public Jeu(File grille, FenetrePrincipale fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
         matriceJeu = new int[TAILLE_GRILLE][TAILLE_GRILLE];
@@ -185,6 +187,7 @@ public class Jeu implements Observateur {
 
             boolean grilleValide = verifierSiGrilleValide();
             if (grilleValide) {
+                fenetreJeu.arreterTimer();
                 proposerDeRecommencer();
             }
         }
@@ -197,7 +200,8 @@ public class Jeu implements Observateur {
         // On demande au joueur s'il veut recommencer
         int recommencer = JOptionPane.showConfirmDialog(
                 fenetreJeu,
-                "Vous avez gagné avec " + CaseSudoku.getNbTotalClics() + " modifications! Voulez-vous recommencer?",
+                "Vous avez gagné avec " + CaseSudoku.getNbTotalClics() + " modifications en " + fenetreJeu.getTempsPartie() + " secondes! \n" +
+                        "Voulez-vous recommencer?",
                 "Partie terminée", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
         if (recommencer == JOptionPane.YES_OPTION) {
             fenetreJeu.recommencerPartie();
