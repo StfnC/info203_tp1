@@ -59,8 +59,6 @@ public class Jeu implements Observateur {
         boolean valide = true;
         for (String ligne : this.lignesGrillesInitiales) {
             // On regarde si chaque ligne contient exactement le bon nombre de charactères
-            System.out.println(ligne.length());
-            System.out.println((float) ligne.length() / TAILLE_GRILLE);
             valide &= (float) ligne.length() / TAILLE_GRILLE == 1.0;
         }
         return valide;
@@ -262,20 +260,22 @@ public class Jeu implements Observateur {
     public void resoudre() {
         // FIXME: Broken
         // Adapté d'ici: https://www.youtube.com/watch?v=G_UYXzGuqvM&ab_channel=Computerphile
-        for (int i = 0; i < TAILLE_GRILLE; i++) {
-            for (int j = 0; j < TAILLE_GRILLE; j++) {
+        for (int ligne = 0; ligne < TAILLE_GRILLE; ligne++) {
+            for (int colonne = 0; colonne < TAILLE_GRILLE; colonne++) {
                 // Si la case n'a pas encore de valeur
-                if (matriceJeu[i][j] == 0) {
-                    for (int k = 1; k <= TAILLE_GRILLE; k++) {
-                        if (peutPlacerValeur(i, j, k) == 0) {
-                            matriceJeu[i][j] = k;
+                if (matriceJeu[ligne][colonne] == 0) {
+                    for (int candidat = 1; candidat <= TAILLE_GRILLE; candidat++) {
+                        if (peutPlacerValeur(ligne, colonne, candidat) == 3) {
+                            matriceJeu[ligne][colonne] = candidat;
                             resoudre();
-                            matriceJeu[i][j] = 0;
+                            matriceJeu[ligne][colonne] = 0;
                         }
                     }
+                    return;
                 }
             }
         }
         afficherMatrice();
+        fenetreJeu.mettreAJourInterfaceAvecNouvelleGrille();
     }
 }
