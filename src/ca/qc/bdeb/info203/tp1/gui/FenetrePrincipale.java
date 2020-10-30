@@ -67,7 +67,7 @@ public class FenetrePrincipale extends JFrame {
         mnuCommentJouer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(FenetrePrincipale.this, MESSAGE_COMMENT_JOUER);
+                JOptionPane.showMessageDialog(FenetrePrincipale.this, MESSAGE_COMMENT_JOUER, "Comment jouer", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         mnuAide.add(mnuCommentJouer);
