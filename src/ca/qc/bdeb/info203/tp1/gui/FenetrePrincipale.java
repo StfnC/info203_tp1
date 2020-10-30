@@ -9,12 +9,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+/**
+ * Fenêtre principale du jeu
+ */
 public class FenetrePrincipale extends JFrame {
     private final String GRILLE_PAR_DEFAUT = "grille.txt";
     private final String MESSAGE_COMMENT_JOUER = "Le but du jeu est de remplir chaque ligne, colonne et bloc de 2x2 avec les nombres de 1 à 4. \n" +
-                                                 "Attention, aucun chiffre ne doit se répéter dans une ligne/colonne/bloc. \n" +
-                                                 "Un indice de couleur vous indique combien de ces conditions sont remplies. \n" +
-                                                 "Plus l'indice est foncé, plus la valeur dans la case est adéquate.";
+            "Attention, aucun chiffre ne doit se répéter dans une ligne/colonne/bloc. \n" +
+            "Un indice de couleur vous indique combien de ces conditions sont remplies. \n" +
+            "Plus l'indice est foncé, plus la valeur dans la case est adéquate.";
     private final int DEFAULT_FRAME_WIDTH = 800;
     private final int DEFAULT_FRAME_HEIGHT = 600;
     private float tempsPartieEnMilliSecondes = 0;
@@ -38,8 +41,11 @@ public class FenetrePrincipale extends JFrame {
         }
     });
 
-    // TODO: Add Javadoc
+    // TODO: Comment action listeners
 
+    /**
+     * Construit une fenêtre principale
+     */
     public FenetrePrincipale() {
         fileChooser.setFileFilter(filtreExtension);
         jeu = new Jeu(new File(GRILLE_PAR_DEFAUT), this);
@@ -94,6 +100,9 @@ public class FenetrePrincipale extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * Change la grille pour concorder avec la matrice contenant les valeurs de jeu
+     */
     public void mettreAJourInterfaceAvecNouvelleGrille() {
         this.setVisible(false);
         pnlJeu = new ConteneurGrille(jeu.getTailleGrille());
@@ -102,6 +111,11 @@ public class FenetrePrincipale extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * Propose à l'utilisateur de choisir un fichier à charger
+     *
+     * @return Fichier que l'utilisateur veut charger
+     */
     public File choisirFichier() {
         int actionUtilisateur = fileChooser.showOpenDialog(FenetrePrincipale.this);
         File fichierAOuvrir = this.fichierGrille;
@@ -112,6 +126,9 @@ public class FenetrePrincipale extends JFrame {
         return fichierAOuvrir;
     }
 
+    /**
+     * Logique effectuée lorsqu'une partie recommence
+     */
     public void recommencerPartie() {
         CaseSudoku.reinitialiserNbTotalCases();
         CaseSudoku.reinitialiserNbTotalClics();
@@ -136,10 +153,17 @@ public class FenetrePrincipale extends JFrame {
         tmrTemps.start();
     }
 
+    /**
+     * Donne la durée de la partie en secondes
+     * @return Durée de la partie en secondes
+     */
     public String getTempsPartie() {
         return tempsPartieEnMilliSecondes / 1000 + "";
     }
 
+    /**
+     * Arrête le timer qui compte la durée de la partie
+     */
     public void arreterTimer() {
         this.tmrTemps.stop();
     }
