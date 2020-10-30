@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CaseSudoku extends JButton implements Observable {
+    private static final Color COULEUR_TEXT_PAR_DEFAUT = new Color(51, 51, 51);
     private static int nbTotalClics = 0;
     private static int nbTotalCases = 0;
     private Map<Integer, Color> indicesCouleurs = new HashMap<>();
@@ -20,9 +21,9 @@ public class CaseSudoku extends JButton implements Observable {
 
     public CaseSudoku(Observateur observateur) {
         indicesCouleurs.put(0, Color.DARK_GRAY);
-        indicesCouleurs.put(1, Color.RED);
-        indicesCouleurs.put(2, Color.YELLOW);
-        indicesCouleurs.put(3, Color.GREEN);
+        indicesCouleurs.put(1, new Color(170, 255, 136));
+        indicesCouleurs.put(2, new Color(133, 255, 51));
+        indicesCouleurs.put(3, new Color(0, 238, 51));
 
         this.definirObservateur(observateur);
         this.numCase = nbTotalCases;
@@ -55,6 +56,11 @@ public class CaseSudoku extends JButton implements Observable {
 
     public void setIndiceCouleurCase(int niveauCouleur) {
         this.setBackground(indicesCouleurs.get(niveauCouleur));
+        this.setForeground(COULEUR_TEXT_PAR_DEFAUT);
+        if (niveauCouleur == 0) {
+            // Ceci améliore le contrast du texte lorsque le bouton est noir
+            this.setForeground(Color.WHITE);
+        }
     }
 
     public static int getNbTotalClics() {
@@ -63,13 +69,6 @@ public class CaseSudoku extends JButton implements Observable {
 
     public static void setNbTotalCases(int nbTotalCases) {
         CaseSudoku.nbTotalCases = nbTotalCases;
-    }
-
-    @Override
-    public String toString() {
-        return "CaseSudoku{" +
-                "numCase=" + numCase +
-                '}';
     }
 
     @Override

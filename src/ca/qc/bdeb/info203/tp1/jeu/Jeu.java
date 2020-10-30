@@ -1,5 +1,6 @@
 package ca.qc.bdeb.info203.tp1.jeu;
 
+import ca.qc.bdeb.info203.tp1.exceptions.GrilleInvalideException;
 import ca.qc.bdeb.info203.tp1.gui.CaseSudoku;
 import ca.qc.bdeb.info203.tp1.gui.FenetrePrincipale;
 import ca.qc.bdeb.info203.tp1.observer.Observable;
@@ -22,8 +23,6 @@ public class Jeu implements Observateur {
     public Jeu(File grille, FenetrePrincipale fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
         matriceJeu = new int[TAILLE_GRILLE][TAILLE_GRILLE];
-        this.lireFichier(grille);
-        this.initialiserMatriceJeu();
     }
 
     public int getTailleGrille() {
@@ -34,17 +33,37 @@ public class Jeu implements Observateur {
         return this.matriceJeu;
     }
 
-    public void lireFichier(File fichier) {
+    public boolean lireFichier(File fichier) throws GrilleInvalideException {
+        boolean fichierValide = true;
         // TODO: Handle the exception better
         // TODO: Make sure that ligneGrillesInitiales % 4 == 0, so there are only complete grids
         try {
             this.lignesGrillesInitiales = Files.readAllLines(fichier.toPath());
+            this.lignesGrillesInitiales.removeIf(ligne -> ligne.contains(DELIMITEUR_GRILE));
+            if (this.lignesGrillesInitiales.size() < TAILLE_GRILLE || this.lignesGrillesInitiales.size() % TAILLE_GRILLE != 0) {
+                fichierValide = false;
+                throw new GrilleInvalideException("Vous avez des grilles incomplètes dans le fichier.");
+            } else if (!validerLignesEgales()) {
+                fichierValide = false;
+                throw new GrilleInvalideException("Mauvais format de fichier.");
+            }
             // Cette ligne permet d'enlever les lignes qui séparent les grilles.
             // On ne peut pas simplement utiliser un boucle et enlever des éléments de la liste, car cela lance une ConcurrentModificationException
-            this.lignesGrillesInitiales.removeIf(ligne -> ligne.contains(DELIMITEUR_GRILE));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ioe) {
+            JOptionPane.showMessageDialog(null, "Erreur d'entré/sortie", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
+        return fichierValide;
+    }
+
+    public boolean validerLignesEgales() {
+        boolean valide = true;
+        for (String ligne : this.lignesGrillesInitiales) {
+            // On regarde si chaque ligne contient exactement le bon nombre de charactères
+            System.out.println(ligne.length());
+            System.out.println((float) ligne.length() / TAILLE_GRILLE);
+            valide &= (float) ligne.length() / TAILLE_GRILLE == 1.0;
+        }
+        return valide;
     }
 
     public int choisirGrilleRandom() {

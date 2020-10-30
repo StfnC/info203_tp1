@@ -1,5 +1,6 @@
 package ca.qc.bdeb.info203.tp1.gui;
 
+import ca.qc.bdeb.info203.tp1.exceptions.GrilleInvalideException;
 import ca.qc.bdeb.info203.tp1.jeu.Jeu;
 
 import javax.swing.*;
@@ -18,6 +19,9 @@ public class FenetrePrincipale extends JFrame {
     private JMenuItem mnuNouvellePartie = new JMenuItem("Nouvelle partie");
     private JMenuItem mnuChargerGrille = new JMenuItem("Charger grille");
     private JMenuItem mnuResoudre = new JMenuItem("Résoudre");
+    private JMenu mnuAide = new JMenu("Aide");
+    private JMenuItem mnuCommentJouer = new JMenuItem("Comment jouer");
+    private JMenuItem mnuAPropos = new JMenuItem("À propos");
     private ConteneurGrille pnlJeu;
     private FileNameExtensionFilter filtreExtension = new FileNameExtensionFilter("Fichier texte (.txt)", "txt");
     private JFileChooser fileChooser = new JFileChooser();
@@ -42,15 +46,8 @@ public class FenetrePrincipale extends JFrame {
         mnuChargerGrille.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int actionUtilisateur = fileChooser.showOpenDialog(FenetrePrincipale.this);
-
-                if (actionUtilisateur == JFileChooser.APPROVE_OPTION) {
-                    File fichierAOuvrir = fileChooser.getSelectedFile();
-                    // FIXME: -ONLY FOR TESTING, REPLACE ASAP
-                    //        -Loading the grid doesn't update ui
-                    fichierGrille = fichierAOuvrir;
-                    FenetrePrincipale.this.recommencerPartie();
-                }
+                fichierGrille = FenetrePrincipale.this.choisirFichier();
+                FenetrePrincipale.this.recommencerPartie();
             }
         });
         mnuJeu.add(mnuChargerGrille);
@@ -63,7 +60,17 @@ public class FenetrePrincipale extends JFrame {
         mnuJeu.add(mnuResoudre);
         menuBar.add(mnuJeu);
 
-        this.mettreAJourInterfaceAvecNouvelleGrille();
+        mnuAide.add(mnuCommentJouer);
+        mnuAPropos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(FenetrePrincipale.this, "Créé par Stefan Cotargasanu");
+            }
+        });
+        mnuAide.add(mnuAPropos);
+        menuBar.add(mnuAide);
+
+        this.recommencerPartie();
 
         this.setJMenuBar(menuBar);
         this.setSize(DEFAULT_FRAME_WIDTH, DEFAULT_FRAME_HEIGHT);
@@ -81,10 +88,34 @@ public class FenetrePrincipale extends JFrame {
         this.setVisible(true);
     }
 
+    public File choisirFichier() {
+        int actionUtilisateur = fileChooser.showOpenDialog(FenetrePrincipale.this);
+        File fichierAOuvrir = this.fichierGrille;
+
+        if (actionUtilisateur == JFileChooser.APPROVE_OPTION) {
+            fichierAOuvrir = fileChooser.getSelectedFile();
+        }
+        return fichierAOuvrir;
+    }
+
     public void recommencerPartie() {
         CaseSudoku.setNbTotalCases(0);
         CaseSudoku.setNbTotalClics(0);
-        jeu.lireFichier(fichierGrille);
+        boolean grilleChargee = false;
+        do {
+            try {
+                jeu.lireFichier(fichierGrille);
+                grilleChargee = true;
+            } catch (GrilleInvalideException gie) {
+                int actionUtilisateur = JOptionPane.showConfirmDialog(this, gie.getMessage() + " Voulez-vous choisir un autre fichier?",
+                        "Une erreur est survenue", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+                if (actionUtilisateur == JOptionPane.YES_OPTION) {
+                    choisirFichier();
+                } else {
+                    System.exit(0);
+                }
+            }
+        } while (!grilleChargee);
         jeu.initialiserMatriceJeu();
         this.mettreAJourInterfaceAvecNouvelleGrille();
     }
