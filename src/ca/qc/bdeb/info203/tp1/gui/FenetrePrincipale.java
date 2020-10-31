@@ -41,15 +41,14 @@ public class FenetrePrincipale extends JFrame {
         }
     });
 
-    // TODO: Comment action listeners
-
     /**
      * Construit une fenêtre principale
      */
     public FenetrePrincipale() {
         fileChooser.setFileFilter(filtreExtension);
-        jeu = new Jeu(new File(GRILLE_PAR_DEFAUT), this);
+        jeu = new Jeu(this);
 
+        // Commence une nouvelle partie
         mnuNouvellePartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,6 +56,8 @@ public class FenetrePrincipale extends JFrame {
             }
         });
         mnuJeu.add(mnuNouvellePartie);
+
+        // Recommence une partie avec des grilles du fichier à charger
         mnuChargerGrille.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -65,6 +66,8 @@ public class FenetrePrincipale extends JFrame {
             }
         });
         mnuJeu.add(mnuChargerGrille);
+
+        // Résoudre la grille
         mnuResoudre.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -74,6 +77,7 @@ public class FenetrePrincipale extends JFrame {
         mnuJeu.add(mnuResoudre);
         menuBar.add(mnuJeu);
 
+        // Affiche un popup qui explique le jeu
         mnuCommentJouer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -81,6 +85,7 @@ public class FenetrePrincipale extends JFrame {
             }
         });
         mnuAide.add(mnuCommentJouer);
+
         mnuAPropos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -155,6 +160,7 @@ public class FenetrePrincipale extends JFrame {
 
     /**
      * Donne la durée de la partie en secondes
+     *
      * @return Durée de la partie en secondes
      */
     public String getTempsPartie() {

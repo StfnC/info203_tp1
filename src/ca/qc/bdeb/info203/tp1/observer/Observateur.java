@@ -6,7 +6,8 @@ package ca.qc.bdeb.info203.tp1.observer;
 public interface Observateur {
     /**
      * Action que prend l'Observateur lorsqu'un objet Observable change d'état
-     * @param origine Objet Observable dont l'état à changé
+     *
+     * @param origine Objet Observable dont l'état a changé
      */
     void mettreAJour(Observable origine);
 }
