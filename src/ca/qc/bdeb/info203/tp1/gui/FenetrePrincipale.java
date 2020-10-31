@@ -122,7 +122,7 @@ public class FenetrePrincipale extends JFrame {
      * @return Fichier que l'utilisateur veut charger
      */
     public File choisirFichier() {
-        int actionUtilisateur = fileChooser.showOpenDialog(FenetrePrincipale.this);
+        int actionUtilisateur = fileChooser.showOpenDialog(this);
         File fichierAOuvrir = this.fichierGrille;
 
         if (actionUtilisateur == JFileChooser.APPROVE_OPTION) {
@@ -140,8 +140,18 @@ public class FenetrePrincipale extends JFrame {
         boolean grilleChargee = false;
         do {
             try {
-                jeu.lireFichier(fichierGrille);
-                grilleChargee = true;
+                if (fichierGrille.exists() && !fichierGrille.isDirectory()) {
+                    jeu.lireFichier(fichierGrille);
+                    grilleChargee = true;
+                } else {
+                    int actionUtilisateur = JOptionPane.showConfirmDialog(this, "Il est impossible de charger la grille par défaut. Voulez-vous choisir un autre fichier?",
+                            "Chargement de la grille", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+                    if (actionUtilisateur == JOptionPane.YES_OPTION) {
+                        fichierGrille = choisirFichier();
+                    } else {
+                        System.exit(0);
+                    }
+                }
             } catch (GrilleInvalideException gie) {
                 int actionUtilisateur = JOptionPane.showConfirmDialog(this, gie.getMessage() + " Voulez-vous choisir un autre fichier?",
                         "Une erreur est survenue", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
