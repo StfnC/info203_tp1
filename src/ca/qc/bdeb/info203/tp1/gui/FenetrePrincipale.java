@@ -27,6 +27,7 @@ public class FenetrePrincipale extends JFrame {
     private JMenuItem mnuNouvellePartie = new JMenuItem("Nouvelle partie");
     private JMenuItem mnuChargerGrille = new JMenuItem("Charger grille");
     private JMenuItem mnuResoudre = new JMenuItem("Résoudre");
+    private JMenuItem mnuQuitter = new JMenuItem("Quitter");
     private JMenu mnuAide = new JMenu("Aide");
     private JMenuItem mnuCommentJouer = new JMenuItem("Comment jouer");
     private JMenuItem mnuAPropos = new JMenuItem("À propos");
@@ -75,6 +76,14 @@ public class FenetrePrincipale extends JFrame {
             }
         });
         mnuJeu.add(mnuResoudre);
+
+        mnuQuitter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        mnuJeu.add(mnuQuitter);
         menuBar.add(mnuJeu);
 
         // Affiche un popup qui explique le jeu
