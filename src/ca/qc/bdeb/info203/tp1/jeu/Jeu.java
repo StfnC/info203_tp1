@@ -23,6 +23,7 @@ public class Jeu implements Observateur {
     private FenetrePrincipale fenetreJeu;
     private List<String> lignesGrillesInitiales;
     private int[][] matriceJeu;
+    private int[][] matriceJeuInitiale;
 
     /**
      * Construit un jeu lié à une fenêtre
@@ -98,8 +99,7 @@ public class Jeu implements Observateur {
         Random r = new Random();
         int nbHasard = r.nextInt(this.lignesGrillesInitiales.size());
         // La division entière permet de ne pas d'avoir la ligne exacte du début de la grille
-        int indexLigneGrille = Math.floorDiv(nbHasard, TAILLE_GRILLE) * TAILLE_GRILLE;
-        return indexLigneGrille;
+        return Math.floorDiv(nbHasard, TAILLE_GRILLE) * TAILLE_GRILLE;
     }
 
     /**
@@ -117,15 +117,28 @@ public class Jeu implements Observateur {
                 matriceJeu[i % TAILLE_GRILLE][j] = Math.max(valeurNumerique, 0);
             }
         }
-        afficherMatrice();
+        clonerMatriceJeu();
+        afficherMatrice(matriceJeu);
     }
 
     /**
-     * Affiche la matrice du jeu
+     * Crée une copie de la matrice de jeu pour garder l'originale
      */
-    public void afficherMatrice() {
+    public void clonerMatriceJeu() {
+        matriceJeuInitiale = new int[matriceJeu.length][];
+        for (int i = 0; i < matriceJeu.length; i++) {
+            matriceJeuInitiale[i] = matriceJeu[i].clone();
+        }
+    }
+
+    /**
+     * Affiche une matrice
+     *
+     * @param matrice Matrice à afficher
+     */
+    public void afficherMatrice(int[][] matrice) {
         System.out.println();
-        for (int[] ligne : matriceJeu) {
+        for (int[] ligne : matrice) {
             System.out.print("[");
             for (int valeur : ligne) {
                 System.out.print(valeur + ", ");
@@ -258,7 +271,7 @@ public class Jeu implements Observateur {
             // Mise à jour de l'interface graphique
             caseSudoku.setIndiceCouleurCase(niveauIndice);
             caseSudoku.setText("" + nouvelleValeur);
-            afficherMatrice();
+            afficherMatrice(matriceJeu);
 
             // Vérifie si le joueur a complété la grille
             boolean grilleValide = verifierSiGrilleValide();
@@ -344,6 +357,9 @@ public class Jeu implements Observateur {
      * Résout la grille à l'aide d'un algorithme de backtracking
      */
     public void resoudre() {
+        // Remet la matrice à son état original, pour être certain qu'on puisse résoudre la grille, peut importe l'état dans lequel le joueur l'a laissée
+        matriceJeu = matriceJeuInitiale;
+
         // Adapté de l'algorithme présenté dans cette vidéo (vers 4:00): https://www.youtube.com/watch?v=G_UYXzGuqvM&ab_channel=Computerphile
         for (int ligne = 0; ligne < TAILLE_GRILLE; ligne++) {
             for (int colonne = 0; colonne < TAILLE_GRILLE; colonne++) {
@@ -361,7 +377,7 @@ public class Jeu implements Observateur {
                 }
             }
         }
-        afficherMatrice();
+        afficherMatrice(matriceJeu);
         fenetreJeu.mettreAJourInterfaceAvecNouvelleGrille();
     }
 }
